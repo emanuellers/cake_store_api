@@ -1,0 +1,7 @@
+START TRANSACTION;
+use store;
+CREATE TABLE clients(firstname VARCHAR(255), lastname VARCHAR(255), email VARCHAR(255) NOT NULL, id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY (id));
+CREATE TABLE orders(id INT NOT NULL AUTO_INCREMENT, client_id INT, ordered_at TIMESTAMP default CURRENT_TIMESTAMP, total_price FLOAT(10,2), delivery_date datetime, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, description VARCHAR(255), PRIMARY KEY (id));
+CREATE TABLE order_details(order_id INT, foreign key(order_id) references orders(id), product_id INT, product_name VARCHAR(255), product_price FLOAT(10,2), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE products (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(255) NOT NULL, description VARCHAR(255), is_available BOOLEAN, price FLOAT(10,2), qtd_stored INT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY(id));
+COMMIT;
