@@ -1,8 +1,8 @@
 package model
 
 type Client struct {
-	FirstName string
-	LastName  string
-	Email     string
-	Id        int64
+	FirstName string `db:"firstname" json:"firstname"`
+	LastName  string `db:"lastname" json:"lastname"`
+	Email     string `db:"email" json:"email"`
+	Id        uint   `db:"id" json:"id"`
 }

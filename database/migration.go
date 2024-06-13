@@ -1,4 +1,4 @@
-package storage
+package database
 
 import (
 	"embed"
@@ -23,7 +23,7 @@ var fs embed.FS
 func (m Migration) Up() {
 	db := DB{}
 
-	conn, err := db.connect()
+	conn, err := db.Connect()
 	if err != nil {
 		panic(err.Error())
 	}

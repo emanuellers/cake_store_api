@@ -3,7 +3,9 @@ package main
 import (
 	"flag"
 
-	"github.com/emanuellers/cake_store_api/storage"
+	route "github.com/emanuellers/cake_store_api/app/routes"
+	"github.com/emanuellers/cake_store_api/database"
+	"github.com/joho/godotenv"
 )
 
 var mode string
@@ -14,11 +16,15 @@ func init() {
 
 func main() {
 	flag.Parse()
+	godotenv.Load()
 
 	switch mode {
 	case "migration":
-		m := storage.Migration{}
+		m := database.Migration{}
 		m.Up()
+		break
+	case "start":
+		route.Routes()
 		break
 	}
 

@@ -3,11 +3,11 @@ package model
 import "time"
 
 type Order struct {
-	Id            int64
-	Client_Id     int64
-	Ordered_at    time.Time
-	Total_Price   float64
-	Delivery_Date time.Time
-	Updated_at    time.Time
-	Description   string
+	Id           int64     `db:"id"`
+	ClientId     int64     `db:"client_id"`
+	OrderedAt    time.Time `db:"ordered_at"`
+	Total_Price  float64   `db:"total_price"`
+	DeliveryDate time.Time `db:"delivery_at"`
+	UpdatedAt    time.Time `db:"updated_at"`
+	Description  string    `db:"description"`
 }
