@@ -11,11 +11,11 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func CreateClient(w http.ResponseWriter, r *http.Request) {
+func CreateOderDetail(w http.ResponseWriter, r *http.Request) {
 
-	client := model.Client{}
+	orderDetail := model.OderDetail{}
 	body := r.Body
-	jsonBody, err := util.JSONDecoderClient(body, client)
+	jsonBody, err := util.JSONDecoderOderDetail(body, orderDetail)
 
 	// out, _ := json.Marshal(jsonBody)
 	// http.Error(w, string(out), http.StatusInternalServerError)
@@ -35,10 +35,11 @@ func CreateClient(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
+
 	}
 	defer conn.Close()
 
-	stmt, err := conn.Prepare("INSERT INTO clients (firstname, lastname, email) VALUES (?, ?, ?)")
+	stmt, err := conn.Prepare("INSERT INTO order_details (order_id, product_id, product_name, product_price) VALUES (?, ?, ?, ?)")
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -46,7 +47,7 @@ func CreateClient(w http.ResponseWriter, r *http.Request) {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(jsonBody.FirstName, jsonBody.LastName, jsonBody.Email)
+	_, err = stmt.Exec(jsonBody.OrderId, jsonBody.ProductId, jsonBody.ProductName, jsonBody.ProductPrice)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -57,13 +58,13 @@ func CreateClient(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func GetClientById(w http.ResponseWriter, r *http.Request) {
+func GetOderDetailById(w http.ResponseWriter, r *http.Request) {
 
 	variables := mux.Vars(r)
 	id, hasId := variables["id"]
 
 	if !hasId {
-		http.Error(w, "Id cliente vazio.", http.StatusBadRequest)
+		http.Error(w, "Id OderDetaile vazio.", http.StatusBadRequest)
 		return
 	}
 
@@ -76,7 +77,7 @@ func GetClientById(w http.ResponseWriter, r *http.Request) {
 	}
 	defer conn.Close()
 
-	stmt, err := conn.Prepare("SELECT * FROM clients WHERE id = (?)")
+	stmt, err := conn.Prepare("SELECT * FROM orderDetails WHERE id = (?)")
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -84,20 +85,20 @@ func GetClientById(w http.ResponseWriter, r *http.Request) {
 	}
 	defer stmt.Close()
 
-	client := model.Client{}
-	err = stmt.QueryRow(id).Scan(&client.FirstName, &client.LastName, &client.Email, &client.Id)
+	orderDetail := model.OderDetail{}
+	err = stmt.QueryRow(id).Scan(&orderDetail.OrderId, &orderDetail.ProductId, &orderDetail.ProductName, &orderDetail.ProductPrice, &orderDetail.CreatedAt)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	clientJson, err := json.Marshal(client)
+	orderDetailJson, err := json.Marshal(orderDetail)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(200)
-	w.Write([]byte(string(clientJson)))
+	w.Write([]byte(string(orderDetailJson)))
 
 }
